@@ -1,12 +1,13 @@
 import tensorflow as tf
 from keras.layers import Input, Dense, Reshape, Dropout, Activation
 from keras.layers import LSTM, Bidirectional, BatchNormalization, ZeroPadding2D
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
 from keras.layers.advanced_activations import LeakyReLU
 from keras.optimizers import Adam
 from keras.utils import np_utils
 import numpy as np
 import pretty_midi
+import pickle
 
 MIDI_PATH = "/home/mark/repos/Springboard/data/"
 
@@ -150,7 +151,7 @@ class GAN():
         model.add(BatchNormalization(momentum=0.8))
         model.add(Dense(np.prod(self.seq_shape), activation='tanh'))
         model.add(Reshape(self.seq_shape))
-        model.add(Dropout(0.2))
+        #model.add(Dropout(0.2))
         model.summary()
         
         noise = Input(shape=(self.latent_dim,))
@@ -198,29 +199,37 @@ class GAN():
             #valid_y = np.array([1] * batch_size)
             
             # Train the generator (to have the discriminator label samples as real)
+            
             g_loss = self.combined.train_on_batch(noise, real)
 
             print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
-
-    def generate(self,input_notes):
-        # Get pitch names and store in a dictionary
-        notes = input_notes
         
-        pitchnames = sorted(set(item for item in notes))
-        int_to_note = dict((number, note) for number, note in enumerate(pitchnames))
-        #print (int_to_note)
-        # Use random noise to generate sequences
-        noise = np.random.normal(0, 1, (1, self.latent_dim))
-        length = len(pitchnames) / 2
-        predictions = self.generator.predict(noise)
-        #print(predictions)
-        pred_notes = [x*length+length for x in predictions[0]]
-        pred_notes = [int_to_note[int(x)] for x in pred_notes]
-        notess = []
-        #print(len(pred_notes))
-        for x in pred_notes:
-            notess.append(int(x))
-        return notess
+        print('Training complete. Saving model.')
+
+        #pickle.dump(gen_seqs, open('model.pkl', 'wb'))
+        #pickle.dump(self.combined, open('model.pkl','wb'))
+        #filename2 = 'model_%s.h5' % (name)
+        self.generator.save('model.h5')
+
+def generate(model, input_notes):
+    # Get pitch names and store in a dictionary
+    notes = input_notes
+    
+    pitchnames = sorted(set(item for item in notes))
+    int_to_note = dict((number, note) for number, note in enumerate(pitchnames))
+    #print (int_to_note)
+    # Use random noise to generate sequences
+    noise = np.random.normal(0, 1, (1, 1000))
+    length = len(pitchnames) / 2
+    predictions = model.predict(noise)
+    #print(predictions)
+    pred_notes = [x*length+length for x in predictions[0]]
+    pred_notes = [int_to_note[int(x)] for x in pred_notes]
+    notess = []
+    #print(len(pred_notes))
+    for x in pred_notes:
+        notess.append(int(x))
+    return notess
 
 #predictions = generate(notes)
 #print(predictions)

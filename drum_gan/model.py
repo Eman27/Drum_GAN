@@ -72,13 +72,12 @@ def main():
 	gan = g.GAN(rows=100)
 	gan.train(genre_dataset=r_list, epochs=10, batch_size=32, sample_interval=1)
 
-	print('Training complete. Saving model.')
+	#pickle.dump(gan, open('model.pkl','wb'))
 
-	pickle.dump(gan, open('model.pkl','wb'))
+	#model = pickle.load(open('model.pkl','rb'))
+	#notes = g.get_notes(r_list)
 
-	model = pickle.load(open('model.pkl','rb'))
-	notes = g.get_notes(r_list)
-	print(model.generate(notes))
+	#print(model.generate(notes))
 
 if __name__ == "__main__":
 	main()
