@@ -10,7 +10,7 @@ import pickle
 import gan as g
 
 #Path for the groove dataset
-DATA_PATH = "../Springboard/data/info.csv"
+DATA_PATH = "../drum_gan/data/info.csv"
 
 def main(argv):
     genre = None
@@ -77,7 +77,7 @@ def main(argv):
     #Generate GAN model and begin training
     print('Begin training GAN model')
     gan = g.GAN(rows=100)
-    gan.train(genre_dataset=r_list, epochs=1000, batch_size=32, sample_interval=1)
+    gan.train(genre_dataset=r_list, genre=genre, epochs=1000, batch_size=32, sample_interval=1)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

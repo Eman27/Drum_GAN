@@ -64,7 +64,7 @@ def generate():
 def play():
     clock = pygame.time.Clock()
     music_file = "../drum_gan/results/result_midi.mid"
-    
+
     #Loads the MIDI file to pygame and attempts to play it
     try:
         pygame.mixer.music.load(music_file)
@@ -87,8 +87,8 @@ def stop():
     return render_template('index.html', prediction_text='Drumtrack stopped!')
 
 #TODO: Remove as it may not be useful
-@app.route('/results',methods=['POST'])
-def results():
+@app.route('/train',methods=['POST'])
+def train():
     print('results')
 
     #data = request.get_json(force=True)
@@ -97,4 +97,4 @@ def results():
     #return jsonify(output)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)

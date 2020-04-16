@@ -9,7 +9,7 @@ import numpy as np
 import pretty_midi
 import pickle
 
-MIDI_PATH = "/home/mark/repos/Springboard/data/"
+MIDI_PATH = "../drum_gan/data/"
 
 genres = {
     0: 'any',
@@ -225,7 +225,7 @@ class GAN():
 
         return Model(noise, seq)
 
-    def train(self, genre_dataset, epochs, batch_size=128, sample_interval=25):
+    def train(self, genre_dataset, genre, epochs, batch_size=128, sample_interval=25):
 
         #Load and convert the data
         notes = get_notes(genre_dataset)
@@ -267,11 +267,17 @@ class GAN():
         
         #Save generator's model so the app can generate new tracks
         print('Training complete. Saving model.')
-        self.generator.save('../drum_gan/models/model_2.h5')
+        if genre != None:
+            self.generator.save('../drum_gan/models/model_' + genre + '.h5')
 
-        #Save notes to reduce time retrieving them for the app
-        pickle.dump(notes,open('../drum_gan/data/notes/any_2.txt','wb'))
+            #Save notes to reduce time retrieving them for the app
+            pickle.dump(notes,open('../drum_gan/data/notes/any_' + genre + '.txt','wb'))
+        else:
+            self.generator.save('../drum_gan/models/model_any.h5')
 
+            #Save notes to reduce time retrieving them for the app
+            pickle.dump(notes,open('../drum_gan/data/notes/any.txt','wb'))
+            
 #Generates the notes for the new drum track using the generator model that was trained
 def generate(model, input_notes):
     #Get pitch names and store in a dictionary
