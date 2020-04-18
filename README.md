@@ -34,6 +34,7 @@ Docker:
 Deployment:
 - The deloyment can be found at the following link:
 - http://945024c1.ngrok.io/
+
 Running API Calls:
 - Training:
   - URL
@@ -42,18 +43,17 @@ Running API Calls:
     - POST
   - Required Data Params:
     - For specific genre:
-      - genre='rock'
+      - {'genre':'rock'}
     - For full dataset training:
       - leave blank
       
 - Generating
-
   - URL
     - /gen
   - Method
     - POST
   - Required Data Params:
     - For specific genre:
-      - genre='rock'
+      - {genre:'rock'}
     - For full dataset training:
       - leave blank
