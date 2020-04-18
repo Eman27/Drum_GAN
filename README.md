@@ -11,30 +11,30 @@ The Problem
  - Install dependencies by running pip install -r requirements.txt
  - Start up the server using python /drum_gan/app.py
  - Visit http://0.0.0.0:5000/ to explore and test
- Docker:
-    - Mac:
-      - git clone https://github.com/Eman27/Springboard.git
-      - cd Springboard/drum_gan
-      - docker build -sudo docker build -t drumgan .
-      - docker sudo docker run -p 5000:5000 drumgan
-    - Windows:
-      - git clone https://github.com/Eman27/Springboard.git
-      - cd Springboard/drum_gan
-      - docker build -sudo docker build -t drumgan .
-      - docker sudo docker run -p 5000:5000 drumgan
-    - Linux:
-      - git clone https://github.com/Eman27/Springboard.git
-      - cd Springboard/drum_gan
-      - docker build -sudo docker build -t drumgan .
-      - docker sudo docker run -p 5000:5000 drumgan
-   - From Docker Hub:
-      - docker login
-      - docker pull memanuele/drum_gan:latest
-      - docker run -it -p 5000:5000 memanuele/drum_gan:latest
-   Go to http://0.0.0.0:5000/
+Docker:
+  - Mac:
+    - git clone https://github.com/Eman27/Springboard.git
+    - cd Springboard/drum_gan
+    - docker build -sudo docker build -t drumgan .
+    - docker sudo docker run -p 5000:5000 drumgan
+  - Windows:
+    - git clone https://github.com/Eman27/Springboard.git
+    - cd Springboard/drum_gan
+    - docker build -sudo docker build -t drumgan .
+    - docker sudo docker run -p 5000:5000 drumgan
+  - Linux:
+    - git clone https://github.com/Eman27/Springboard.git
+    - cd Springboard/drum_gan
+    - docker build -sudo docker build -t drumgan .
+    - docker sudo docker run -p 5000:5000 drumgan
+ - From Docker Hub:
+    - docker login
+    - docker pull memanuele/drum_gan:latest
+    - docker run -it -p 5000:5000 memanuele/drum_gan:latest
+ Go to http://0.0.0.0:5000/
 Deployment:
-  - The deloyment can be found at the following link:
-  - http://945024c1.ngrok.io/
+- The deloyment can be found at the following link:
+- http://945024c1.ngrok.io/
 Running API Calls:
-  - Training:
-    - f
+- Training:
+  - f
