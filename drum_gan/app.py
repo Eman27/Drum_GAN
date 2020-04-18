@@ -1,4 +1,5 @@
 import os
+import uuid
 import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
@@ -36,7 +37,6 @@ def generate():
     tb._SYMBOLIC_SCOPE.value = False
 
     values = [x for x in request.form.values()]
-    #if len(values) > 1:
 
     genre = int(values[0])
     
@@ -53,10 +53,12 @@ def generate():
     logging.info('Generate notes for the new track')
     predictions = g.generate(model, notes)
     midi_result = g.create_midi(predictions)
-    midi_name = ROOT_DIR+"/static/result_midi.mid"
+    filename = str(uuid.uuid4())+".mid"
+    midi_name = ROOT_DIR+"/static/"+filename
+    #midi_name = ROOT_DIR+"/static/result_midi.mid"
     midi_result.write(midi_name)
     logging.info('New track is created, (%s)',midi_name)
-    return render_template('index.html', prediction_text='Drumtrack Generated!')
+    return render_template('index.html', prediction_text='Drumtrack Generated!', value=filename)
 
 #API
 @app.route('/gen',methods=['POST'])

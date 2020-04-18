@@ -14,10 +14,10 @@
 
 <script>
 function playMidi(){
-    MIDIjs.play("{{ url_for('static', filename='result_midi.mid') }}");
+    MIDIjs.play("{{ url_for('static', filename=value) }}");
 }
 function stopMidi(){
-	MIDIjs.stop("{{ url_for('static', filename='result_midi.mid') }}");
+	MIDIjs.stop("{{ url_for('static', filename=value) }}");
 }
 </script>
 
@@ -44,7 +44,7 @@ function stopMidi(){
 	{{ prediction_text }}
 
 	<br>
-	 <a href="../static/result_midi.mid" download>DOWNLOAD FILE</a>
+	 <a href="{{ url_for('static', filename=value) }}" download>DOWNLOAD FILE</a>
 
 </div>
 </body>
