@@ -22,7 +22,6 @@ genres = {
     1: 'rock',
     2: 'funk',
     3: 'jazz',
-    4: 'latin'
 }
 
 @app.route('/')
