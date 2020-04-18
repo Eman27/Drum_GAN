@@ -10,7 +10,6 @@ COPY requirements.txt .
 RUN pip install --upgrade -r requirements.txt
 
 COPY . /drum_gan
-RUN ls -la /drum_gan/*
 
 WORKDIR /drum_gan
 

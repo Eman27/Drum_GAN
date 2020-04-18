@@ -61,14 +61,14 @@ def train_gan(input_genre):
 
     #Determine if the model is on all of the styles or one specified
     if genre is None:
-        print('Saving full note list')
+        logging.info('Saving full note list')
         r_list = groove_df.midi_filename.tolist()
     else:
-        print('Saving note list for genre: %s', genre)
+        logging.info('Saving note list for genre: %s', genre)
         r_list = genre_midi_list[genre]
 
     #Generate GAN model and begin training
-    print('Begin training GAN model')
+    logging.info('Begin training GAN model')
     gan = g.GAN(rows=100)
     gan.train(genre_dataset=r_list, genre=genre, epochs=5, batch_size=32, sample_interval=1)
 
