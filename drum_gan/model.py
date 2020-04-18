@@ -9,7 +9,7 @@ logging._warn_preinit_stderr = 0
 logging.set_verbosity(logging.DEBUG)
 
 #Path for the groove dataset
-DATA_PATH = "../drum_gan/data/info.csv"
+DATA_PATH = "data/info.csv"
 
 def train_gan(input_genre):
 

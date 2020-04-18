@@ -14,6 +14,8 @@ logging.set_verbosity(logging.DEBUG)
 
 app = Flask(__name__)
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 genres = {
     0: 'any',
     1: 'rock',
@@ -39,25 +41,24 @@ def generate():
     genre = int(values[0])
     
     #Load the generator's model from its stored location
-    model_name = '../drum_gan/models/model_' + genres[genre] + '.h5'
+    model_name = ROOT_DIR+'/models/model_' + genres[genre] + '.h5'
     model = load_model(model_name)
     
     #Loads the notes that were recieved when the model was originally trained
     logging.info('Retrieve notes from %s', genre)
-    notes = pickle.load(open('../drum_gan/data/notes/'+genres[genre]+'.txt', 'rb'))
+    notes = pickle.load(open(ROOT_DIR+'/data/notes/'+genres[genre]+'.txt', 'rb'))
 
     #Generate the notes for the new drumtrack
     #Create a new MIDI file and save it to be played
     logging.info('Generate notes for the new track')
     predictions = g.generate(model, notes)
     midi_result = g.create_midi(predictions)
-    midi_name = "../drum_gan/static/result_midi.mid"
-    #if os.path.exists(midi_name):
-    #    os.remove(midi_name)
+    midi_name = ROOT_DIR+"/static/result_midi.mid"
     midi_result.write(midi_name)
     logging.info('New track is created, (%s)',midi_name)
     return render_template('index.html', prediction_text='Drumtrack Generated!')
 
+#API
 @app.route('/gen',methods=['POST'])
 def gen():
     tb._SYMBOLIC_SCOPE.value = False    
@@ -74,20 +75,19 @@ def gen():
     genre = values[0]
     
     #Load the generator's model from its stored location
-    model_name = '../drum_gan/models/model_' + genre + '.h5'
+    model_name = ROOT_DIR+'/models/model_' + genre + '.h5'
     model = load_model(model_name)
     
     #Loads the notes that were recieved when the model was originally trained
     logging.info('Retrieve notes from %s', genre)
-    notes = pickle.load(open('../drum_gan/data/notes/'+genre+'.txt', 'rb'))
-
+    notes = pickle.load(open(ROOT_DIR+'/data/notes/'+genre+'.txt', 'rb'))
     #Generate the notes for the new drumtrack
     #Create a new MIDI file and save it to be played
     logging.info('Generate notes for the new track')
     predictions = g.generate(model, notes)
     midi_result = g.create_midi(predictions)
-    midi_name = "../drum_gan/static/result_midi.mid"
-    midi_result.write('../drum_gan/static/result_midi.mid')
+    midi_name = ROOT_DIR+"/static/result_midi.mid"
+    midi_result.write(midi_name)
     logging.info('New track is created, (%s)',midi_name)
     return jsonify(midi_name)
 
@@ -103,7 +103,7 @@ def train():
     else:
         genre = 'any'
         logging.info("Begin training with all genres")
-    tb._SYMBOLIC_SCOPE.value = False
+    tb._SYMBOLIC_SCOPE.value = True
     m.train_gan(genre)
     return jsonify("Training complete.")
 

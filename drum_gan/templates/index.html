@@ -14,10 +14,10 @@
 
 <script>
 function playMidi(){
-    MIDIjs.play("{{ url_for('static', filename='/result_midi.mid') }}");
+    MIDIjs.play("{{ url_for('static', filename='result_midi.mid') }}");
 }
 function stopMidi(){
-	MIDIjs.stop("{{ url_for('static', filename='/result_midi.mid') }}");
+	MIDIjs.stop("{{ url_for('static', filename='result_midi.mid') }}");
 }
 </script>
 
