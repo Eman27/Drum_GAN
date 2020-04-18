@@ -28,7 +28,8 @@ Docker:
     - cd Springboard/drum_gan
     - docker build -sudo docker build -t drumgan .
     - docker sudo docker run -p 5000:5000 drumgan  
-  Go to http://0.0.0.0:5000/
+
+- Then go to http://0.0.0.0:5000/
  
 Deployment:
 - The deloyment can be found at the following link:
