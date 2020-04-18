@@ -1,12 +1,16 @@
+import os
 import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
 import pickle
 import gan as g
+import model as m
 import tensorflow as tf
-import pygame
 import keras.backend.tensorflow_backend as tb
 from keras.models import load_model
+from absl import logging
+logging._warn_preinit_stderr = 0
+logging.set_verbosity(logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -14,17 +18,9 @@ genres = {
     0: 'any',
     1: 'rock',
     2: 'funk',
-    3: 'hiphop',
-    4: 'jazz',
-    5: 'latin',
-    6: 'afrobeat',
-    7: 'soul',
-    8: 'reggae',
-    9: 'pop',
-    10: 'any_2'
+    3: 'jazz',
+    4: 'latin'
 }
-
-pygame.init()
 
 @app.route('/')
 def home():
@@ -33,68 +29,83 @@ def home():
 #Generates a drum track based on the selected genre
 @app.route('/generate',methods=['POST'])
 def generate():
-    print('Generate')
+    logging.info('Begin generating track..')
 
     tb._SYMBOLIC_SCOPE.value = False
 
     values = [x for x in request.form.values()]
+    #if len(values) > 1:
+
     genre = int(values[0])
     
     #Load the generator's model from its stored location
     model_name = '../drum_gan/models/model_' + genres[genre] + '.h5'
     model = load_model(model_name)
     
-    #drum_df = pd.read_csv("../drum_gan/data/drum_tracks.csv")
-    #midi_list = drum_df.midi_filename.tolist()
-    #notes = g.get_notes(midi_list)
-    
     #Loads the notes that were recieved when the model was originally trained
+    logging.info('Retrieve notes from %s', genre)
     notes = pickle.load(open('../drum_gan/data/notes/'+genres[genre]+'.txt', 'rb'))
 
     #Generate the notes for the new drumtrack
     #Create a new MIDI file and save it to be played
+    logging.info('Generate notes for the new track')
     predictions = g.generate(model, notes)
     midi_result = g.create_midi(predictions)
-    midi_name = "../drum_gan/results/result_midi.mid"
-    midi_result.write('../drum_gan/results/result_midi.mid')
-    return render_template('index.html', prediction_text='{} Drumtrack Ready'.format(midi_name))
+    midi_name = "../drum_gan/static/result_midi.mid"
+    #if os.path.exists(midi_name):
+    #    os.remove(midi_name)
+    midi_result.write(midi_name)
+    logging.info('New track is created, (%s)',midi_name)
+    return render_template('index.html', prediction_text='Drumtrack Generated!')
 
-#Plays the generated drumtrack
-@app.route('/play',methods=['POST'])
-def play():
-    clock = pygame.time.Clock()
-    music_file = "../drum_gan/results/result_midi.mid"
+@app.route('/gen',methods=['POST'])
+def gen():
+    tb._SYMBOLIC_SCOPE.value = False    
+    values = [x for x in request.form.values()]
+    if len(values) > 1:
+       logging.debug("ERROR: Invalid number of genres, expected only one genre or none for all genres")
+       return jsonify("Error: Invalid number of inputs")
+    elif len(values) == 1 and values[0] != '':
+        genre = values[0]
+    else:
+        genre = 'any'
+    logging.info("Begin generating track")
 
-    #Loads the MIDI file to pygame and attempts to play it
-    try:
-        pygame.mixer.music.load(music_file)
-        print ("Music file %s loaded!" % music_file)
-    except pygame.error:
-        print ("File %s not found! (%s)" % (music_file, pygame.get_error()))
-        return render_template('index.html', prediction_text='Midi was not playable')
-    pygame.mixer.music.play()
+    genre = values[0]
+    
+    #Load the generator's model from its stored location
+    model_name = '../drum_gan/models/model_' + genre + '.h5'
+    model = load_model(model_name)
+    
+    #Loads the notes that were recieved when the model was originally trained
+    logging.info('Retrieve notes from %s', genre)
+    notes = pickle.load(open('../drum_gan/data/notes/'+genre+'.txt', 'rb'))
 
-    #Plays the track until completion
-    while pygame.mixer.music.get_busy():
-        # check if playback has finished
-        clock.tick()
-    return render_template('index.html', prediction_text='Drumtrack finished!')
+    #Generate the notes for the new drumtrack
+    #Create a new MIDI file and save it to be played
+    logging.info('Generate notes for the new track')
+    predictions = g.generate(model, notes)
+    midi_result = g.create_midi(predictions)
+    midi_name = "../drum_gan/static/result_midi.mid"
+    midi_result.write('../drum_gan/static/result_midi.mid')
+    logging.info('New track is created, (%s)',midi_name)
+    return jsonify(midi_name)
 
-#Manually stops the MIDI file from playing
-@app.route('/stop',methods=['POST'])
-def stop():
-    pygame.mixer.music.stop()
-    return render_template('index.html', prediction_text='Drumtrack stopped!')
-
-#TODO: Remove as it may not be useful
 @app.route('/train',methods=['POST'])
 def train():
-    print('results')
-
-    #data = request.get_json(force=True)
-    #prediction = model.predict([np.array(list(data.values()))])
-    #output = prediction[0]
-    #return jsonify(output)
+    values = [x for x in request.form.values()]
+    if len(values) > 1:
+       logging.debug("ERROR: Invalid number of genres, expected only one genre or none for all genres")
+       return jsonify("Error: Invalid number of inputs")
+    elif len(values) == 1 and values[0] != '':
+        genre = values[0]
+        logging.info("Begin training for genre: %s", genre)
+    else:
+        genre = 'any'
+        logging.info("Begin training with all genres")
+    tb._SYMBOLIC_SCOPE.value = False
+    m.train_gan(genre)
+    return jsonify("Training complete.")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

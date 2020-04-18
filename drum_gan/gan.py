@@ -8,6 +8,9 @@ from keras.utils import np_utils
 import numpy as np
 import pretty_midi
 import pickle
+from absl import logging
+logging._warn_preinit_stderr = 0
+logging.set_verbosity(logging.DEBUG)
 
 MIDI_PATH = "../drum_gan/data/"
 
@@ -22,31 +25,6 @@ genres = {
     7: 'soul',
     8: 'reggae',
     9: 'pop'
-}
-
-roland_to_gm = {
-    36 : 36,
-    38 : 38,
-    40 : 38,
-    37 : 38,
-    48 : 50,
-    50 : 50,
-    45 : 47,
-    47 : 47,
-    43 : 43,
-    58 : 43,
-    46 : 46,
-    26 : 46,
-    42 : 42,
-    22 : 42,
-    44 : 42,
-    49 : 49,
-    55 : 49,
-    57 : 49,
-    52 : 49,
-    51 : 51,
-    59 : 51,
-    53 : 51
 }
 
 #Parses through a list of midi files and retrieves all of their notes
@@ -65,32 +43,19 @@ def get_notes(midi_list):
                     notes.append((note.pitch))
     return notes
 
-#TODO: REMOVE as it doesnt seem to generate as good of pieces
-#Test what happens
-def get_notes_new(midi_list):
-    notes = []
-    for file in midi_list:
-        midi = pretty_midi.PrettyMIDI(MIDI_PATH + file)
-        for instrument in midi.instruments:
-            if instrument.is_drum:
-                for note in instrument.notes:
-                    note.pitch = roland_to_gm[int(note.pitch)]
-                    notes.append((note.pitch))
-    return notes
-
 #Prepares the inputs and outputs for the model to train
 def prepare_sequences(notes, n_vocab):
     sequence_length = 100
-    print("\n**Preparing sequences for training**")
+    logging.info("\n**Preparing sequences for training**")
 
     #List of unique chords and notes
     pitchnames = sorted(set(i for i in notes))
 
-    print("Pitchnames (unique notes/chords from 'notes') at length {}: {}".format(len(pitchnames),pitchnames))
+    logging.info("Pitchnames (unique notes/chords from 'notes') at length {}: {}".format(len(pitchnames),pitchnames))
     
     #Enumerate pitchnames into dictionary embedding
     note_to_int = dict((note, number) for number, note in enumerate(pitchnames))
-    print("Note to integer embedding created at length {}".format(len(note_to_int)))
+    logging.info("Note to integer embedding created at length {}".format(len(note_to_int)))
 
     network_input = []
     network_output = []
@@ -110,11 +75,11 @@ def prepare_sequences(notes, n_vocab):
         output_add = note_to_int[sequence_out]
         network_output.append(output_add) # single note
 
-    print("Network input and output created with (pre-transform) lengths {} and {}".format(len(network_input),len(network_output)))
+    logging.info("Network input and output created with (pre-transform) lengths {} and {}".format(len(network_input),len(network_output)))
     
     n_patterns = len(network_input) # notes less sequence length
-    print("Lengths. N Vocab: {} N Patterns: {} Pitchnames: {}".format(n_vocab,n_patterns, len(pitchnames)))
-    print("\n**Reshaping for training**")
+    logging.info("Lengths. N Vocab: {} N Patterns: {} Pitchnames: {}".format(n_vocab,n_patterns, len(pitchnames)))
+    logging.info("\n**Reshaping for training**")
 
     #Convert network input/output from lists to numpy arrays
     #Reshape input to (notes less sequence length, sequence length)
@@ -126,8 +91,8 @@ def prepare_sequences(notes, n_vocab):
     #Reshape output to (notes less sequence length, unique notes/chords)    
     network_output_r = np_utils.to_categorical(network_output)
 
-    print("Reshaping network input to (notes - sequence length, sequence length) {}".format(network_input_r.shape))
-    print("Reshaping network output to (notes - sequence length, unique notes) {}".format(network_output_r.shape))
+    logging.info("Reshaping network input to (notes - sequence length, sequence length) {}".format(network_input_r.shape))
+    logging.info("Reshaping network output to (notes - sequence length, unique notes) {}".format(network_output_r.shape))
     return network_input_r, network_output_r, n_patterns, n_vocab, pitchnames
 
 #Creates a new MIDI file from the generated notes
@@ -263,7 +228,7 @@ class GAN():
             #Train the generator (to have the discriminator label samples as real)
             g_loss = self.combined.train_on_batch(noise, real)
 
-            print ("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
+            logging.info("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
         
         #Save generator's model so the app can generate new tracks
         print('Training complete. Saving model.')

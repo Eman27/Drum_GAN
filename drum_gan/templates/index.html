@@ -8,18 +8,43 @@
 <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script type='text/javascript' src='//www.midijs.net/lib/midi.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
 </head>
+
+<script>
+function playMidi(){
+    MIDIjs.play("{{ url_for('static', filename='/result_midi.mid') }}");
+}
+function stopMidi(){
+	MIDIjs.stop("{{ url_for('static', filename='/result_midi.mid') }}");
+}
+</script>
 
 <body style="background: #000;">
 	<div class="login">
 		<h1>Drumtrack Generation</h1>
 	<form action="{{ url_for('generate')}}"method="post">
-		<input type="text" name="Genre" placeholder="Mix" required="required" />
-		<button type="submit" class"btn btn-primary btn-block btn-large">Generate Drums!</button>
+		<label>Choose A Genre:</label>
+		<select name="genres" required="required">
+			<option value = "0">Any</option>
+			<option value = "1">Rock</option>
+			<option value = "2">Funk</option>
+			<option value = "3">Jazz</option>
+			<option value = "4">Latin</option>
+		</select>
+		<button type="submit" class"btn btn-primary btn-block btn-large">Generate Drums</button>
 	</form>
 <br>
-<br>
-{{ prediction_text }}
+	
+	<button type="submit" onClick="playMidi()" class"btn btn-primary btn-block btn-large">Play Sample Drum Track</button>
+	<br>
+	<button type="submit" onClick="stopMidi()" class"btn btn-primary btn-block btn-large">Stop Sample</button>
+	<br>
+	{{ prediction_text }}
+
+	<br>
+	 <a href="../static/result_midi.mid" download>DOWNLOAD FILE</a>
 
 </div>
 </body>
