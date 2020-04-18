@@ -5,12 +5,12 @@ The Problem
   
  Local:
  - It is recommended to set up the project inside a virtual enviroment to keep the dependencies separated.
-      - Python
-      - Conda
-     - Activate your virtual enviroment.
-     - Install dependencies by running pip install -r requirements.txt
-     - Start up the server using python /drum_gan/app.py
-     - Visit http://0.0.0.0:5000/ to explore and test
+    - Python
+    - Conda
+ - Activate your virtual enviroment.
+ - Install dependencies by running pip install -r requirements.txt
+ - Start up the server using python /drum_gan/app.py
+ - Visit http://0.0.0.0:5000/ to explore and test
  Docker:
     - Mac:
       - git clone https://github.com/Eman27/Springboard.git
@@ -33,8 +33,8 @@ The Problem
       - docker run -it -p 5000:5000 memanuele/drum_gan:latest
    Go to http://0.0.0.0:5000/
 Deployment:
-  - The deloyment can be found at the following link
-   http://945024c1.ngrok.io/
+  - The deloyment can be found at the following link:
+  - http://945024c1.ngrok.io/
 Running API Calls:
   - Training:
     - f
