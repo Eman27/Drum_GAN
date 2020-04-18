@@ -11,6 +11,7 @@ Local:
    - Install dependencies by running pip install -r requirements.txt
    - Start up the server using python /drum_gan/app.py
    - Visit http://0.0.0.0:5000/ to explore and test
+
 Docker:
   - Mac:
     - git clone https://github.com/Eman27/Springboard.git
