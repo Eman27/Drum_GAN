@@ -3,7 +3,7 @@
 The Problem
   When practicing an instrument such as guitar, the act of training alone can feel tedious and boring. Practicing scales, chords and patterns to a metronome can become monotonous does not spark the same joy most feel when playing as part of a group. One can play along to songs to simulate this experience but it does not allow the player to be creative in their approach to the song. They are just following along, making sure they are hitting the correct notes at the right moments. The goal of this project is to generate drum tracks for the player so that they have something unique and original to play alongside. The purpose of these tracks is to allow the player to apply their theory and delve into the creative aspects of playing such as song writing and improvision.
   
- Local:
+Local:
  - It is recommended to set up the project inside a virtual enviroment to keep the dependencies separated.
     - Python
     - Conda
