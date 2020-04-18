@@ -36,4 +36,24 @@ Deployment:
 - http://945024c1.ngrok.io/
 Running API Calls:
 - Training:
-  - 
+  - URL
+    - /train
+  - Method
+    - POST
+  - Required Data Params:
+    - For specific genre:
+      - genre='rock'
+    - For full dataset training:
+      - leave blank
+      
+- Generating
+
+  - URL
+    - /gen
+  - Method
+    - POST
+  - Required Data Params:
+    - For specific genre:
+      - genre='rock'
+    - For full dataset training:
+      - leave blank
