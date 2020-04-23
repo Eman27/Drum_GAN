@@ -70,7 +70,7 @@ def train_gan(input_genre):
     #Generate GAN model and begin training
     logging.info('Begin training GAN model')
     gan = g.GAN(rows=100)
-    gan.train(genre_dataset=r_list, genre=genre, epochs=5, batch_size=32, sample_interval=1)
+    gan.train(genre_dataset=r_list, genre=genre, epochs=1000, batch_size=32, sample_interval=1)
 
 
 def main(argv):
@@ -138,7 +138,7 @@ def main(argv):
     #Generate GAN model and begin training
     logging.info('Begin training GAN model')
     gan = g.GAN(rows=100)
-    gan.train(genre_dataset=r_list, genre=genre, epochs=5, batch_size=32, sample_interval=1)
+    gan.train(genre_dataset=r_list, genre=genre, epochs=1000, batch_size=32, sample_interval=1)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

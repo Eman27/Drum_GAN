@@ -231,7 +231,7 @@ class GAN():
             logging.info("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
         
         #Save generator's model so the app can generate new tracks
-        print('Training complete. Saving model.')
+        logging.info('Training complete. Saving model.')
         if genre != None:
             self.generator.save('models/model_' + genre + '.h5')
 
