@@ -39,7 +39,7 @@ Docker:
  
 Deployment:
 - The deloyment can be found at the following link:
-- http://fee4fea3.ngrok.io
+- http://9bbc55aa.ngrok.io
 
 Running API Calls:
 - Training:
