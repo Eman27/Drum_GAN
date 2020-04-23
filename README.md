@@ -27,13 +27,19 @@ Docker:
     - git clone https://github.com/Eman27/Springboard.git
     - cd Springboard/drum_gan
     - docker build -sudo docker build -t drumgan .
-    - docker sudo docker run -p 5000:5000 drumgan  
+    - docker sudo docker run -p 5000:5000 drumgan
+  - Cloud:
+    - Create a VM in Azure, GCP or AWS
+    - git clone https://github.com/Eman27/Springboard.git
+    - cd Springboard/drum_gan
+    - docker build sudo docker build -t drumgan
+    - docker sudo docker run -p 5000:5000 drumgan
 
 - Then go to http://0.0.0.0:5000/
  
 Deployment:
 - The deloyment can be found at the following link:
-- http://945024c1.ngrok.io/
+- http://fee4fea3.ngrok.io
 
 Running API Calls:
 - Training:
